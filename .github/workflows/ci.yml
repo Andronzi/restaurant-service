@@ -24,7 +24,7 @@ jobs:
           path: ~/.npm
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
       - name: install dependencies from package.lock file
-        run: npm install --frozen-lockfile
+        run: npm ci
       - name: cache npm dependencies
         uses: actions/cache/save@v3
         with:
