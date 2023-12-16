@@ -20,4 +20,4 @@ jobs:
           node-version: '20.x'
       - name: install deps from package.lock file
         run: npm install --frozen-lockfile
-      - run: nx build restaurant
+      - run: npx nx build restaurant
