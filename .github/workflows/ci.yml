@@ -22,12 +22,12 @@ jobs:
         uses: actions/cache/restore@v3
         with:
           path: ~/.npm
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package.json') }}
       - name: install dependencies from package.lock file
-        run: npm ci --no-save
+        run: npm ci
       - name: cache npm dependencies
         uses: actions/cache/save@v3
         with:
           path: ~/.npm
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package.json') }}
       - run: npx nx build restaurant
