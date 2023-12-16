@@ -18,6 +18,16 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
-      - name: install deps from package.lock file
+      - name: restore cached npm dependencies
+        uses: actions/cache/restore@v3
+        with:
+          path: node_modules
+          key: npm-dependencies-${{ hashFiles('package-lock.json') }}
+      - name: install dependencies from package.lock file
         run: npm install --frozen-lockfile
+      - name: cache npm dependencies
+        uses: actions/cache/save@v3
+        with:
+          path: node_modules
+          key: npm-dependencies-${{ hashFiles('package-lock.json') }}
       - run: npx nx build restaurant
