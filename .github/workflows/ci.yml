@@ -17,14 +17,14 @@ jobs:
       - name: use node
         uses: actions/setup-node@v3
         with:
-          node-version: '21.4.x'
+          node-version: '21.4.0'
       - name: restore cached npm dependencies
         uses: actions/cache/restore@v3
         with:
           path: ~/.npm
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-      - name: install dependencies
-        run: npm install
+      - name: install dependencies from package.lock file
+        run: npm install --frozen-lockfile
       - name: cache npm dependencies
         uses: actions/cache/save@v3
         with:
