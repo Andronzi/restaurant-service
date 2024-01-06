@@ -8,6 +8,12 @@ on:
 
 jobs:
   main:
+    name: Nx Cloud - Main Job
+    uses: nrwl/ci/.github/workflows/nx-cloud-main.yml@v0.13.0
+    with:
+      number-of-agents: 3
+      parallel-commands-on-agents: |
+        npx nx affected -t lint,test,build,e2e --parallel=2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +39,8 @@ jobs:
       - name: fix problem with playwright deps
         run: npx playwright install-deps
       - run: git branch --track main origin/main
-      - name: Nx Cloud - Main Job
-        uses: nrwl/ci/.github/workflows/nx-cloud-main.yml@v0.13.0
-        with:
-          number-of-agents: 3
-          parallel-commands-on-agents: |
-            npx nx affected -t lint,test,build,e2e --parallel=2
+      - run: npx nx affected -t lint,test,build --parallel=3 --configuration=ci
+      - run: npx nx affected -t e2e --parallel=1
 
   agents:
     - name: Nx Cloud - Agents
