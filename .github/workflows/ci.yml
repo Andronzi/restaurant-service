@@ -2,7 +2,6 @@ name: CI
 on:
   push:
     branches:
-      # Change this if your primary branch is not main
       - main
   pull_request:
 
@@ -12,35 +11,10 @@ jobs:
     uses: nrwl/ci/.github/workflows/nx-cloud-main.yml@v0.13.0
     with:
       number-of-agents: 3
+      parallel-commands: |
+        npx nx-cloud record -- npx nx format:check
       parallel-commands-on-agents: |
-        npx nx affected -t lint,test,build,e2e --parallel=2
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: use node
-        uses: actions/setup-node@v3
-        with:
-          node-version: '21.4.0'
-      - name: restore cached npm dependencies
-        uses: actions/cache/restore@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package.json') }}
-      - name: install dependencies from package.lock file
-        run: npm ci
-      - name: cache npm dependencies
-        uses: actions/cache/save@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package.json') }}
-      - uses: nrwl/nx-set-shas@v3
-      - name: fix problem with playwright deps
-        run: npx playwright install-deps
-      - run: git branch --track main origin/main
-      - run: npx nx affected -t lint,test,build --parallel=3 --configuration=ci
-      - run: npx nx affected -t e2e --parallel=1
+        npx nx affected -t lint,test,build --parallel=2
 
   agents:
     name: Nx Cloud - Agents
