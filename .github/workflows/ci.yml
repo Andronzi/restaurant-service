@@ -30,6 +30,8 @@ jobs:
           path: ~/.npm
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package.json') }}
       - uses: nrwl/nx-set-shas@v3
+      - name: fix problem with playwright deps
+        run: npx playwright install-deps
       - run: git branch --track main origin/main
       - run: npx nx affected -t lint,test,build --parallel=3 --configuration=ci
       - run: npx nx affected -t e2e --parallel=1
