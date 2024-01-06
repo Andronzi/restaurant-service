@@ -10,7 +10,6 @@ jobs:
   main:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello GitHub Actions!"
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -30,4 +29,9 @@ jobs:
         with:
           path: ~/.npm
           key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package.json') }}
-      - run: npx nx build restaurant
+      - uses: nrwl/nx-set-shas@v3
+      - name: fix problem with playwright deps
+        run: npx playwright install-deps
+      - run: git branch --track main origin/main
+      - run: npx nx affected -t lint,test,build --parallel=3 --configuration=ci
+      - run: npx nx affected -t e2e --parallel=1
